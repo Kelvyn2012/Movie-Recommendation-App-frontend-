@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineVerse - Movie Recommendations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            200: '#fecaca',
+                            300: '#fca5a5',
+                            400: '#f87171',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            800: '#991b1b',
+                            900: '#7f1d1d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <!-- Navigation -->
+    <nav class="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-50 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-8">
+                    <a href="/" class="flex items-center space-x-2">
+                        <i class="fas fa-film text-3xl text-red-500"></i>
+                        <span class="text-2xl font-bold bg-gradient-to-r from-red-500 to-pink-500 bg-clip-text text-transparent">CineVerse</span>
+                    </a>
+                    <div class="hidden md:flex space-x-6" id="mainNav">
+                        <a href="#" class="nav-link active text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 font-medium" data-section="trending">Trending</a>
+                        <a href="#" class="nav-link text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 font-medium" data-section="popular">Popular</a>
+                        <a href="#" class="nav-link hidden text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 font-medium" data-section="recommended" id="recommendedNav">Recommended</a>
+                        <a href="#" class="nav-link hidden text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 font-medium" data-section="favorites" id="favoritesNav">My Favorites</a>
+                        <a href="#" class="nav-link hidden text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 font-medium" data-section="watchlist" id="watchlistNav">Watchlist</a>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <!-- Search Bar -->
+                    <div class="relative hidden md:block">
+                        <input type="text" id="searchInput" placeholder="Search movies..."
+                            class="w-64 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-300">
+                        <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+                    </div>
+
+                    <!-- Theme Toggle -->
+                    <button id="themeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-300">
+                        <i class="fas fa-moon dark:hidden text-gray-700"></i>
+                        <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
+                    </button>
+
+                    <!-- Auth Buttons -->
+                    <div id="authButtons" class="flex items-center space-x-2">
+                        <button id="loginBtn" class="px-4 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-300 font-medium">Login</button>
+                        <button id="registerBtn" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-300 font-medium">Sign Up</button>
+                    </div>
+
+                    <!-- User Menu -->
+                    <div id="userMenu" class="hidden relative">
+                        <button id="userMenuBtn" class="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300">
+                            <i class="fas fa-user-circle text-2xl text-red-500"></i>
+                            <span id="userName" class="font-medium"></span>
+                        </button>
+                        <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl py-2">
+                            <a href="#" id="profileLink" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300">
+                                <i class="fas fa-user mr-2"></i>Profile
+                            </a>
+                            <button id="logoutBtn" class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="mb-12 text-center">
+            <h1 class="text-5xl font-bold mb-4 bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 bg-clip-text text-transparent">
+                Discover Your Next Favorite Movie
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">
+                Personalized recommendations powered by intelligent algorithms
+            </p>
+        </div>
+
+        <!-- Section Title -->
+        <div class="flex items-center justify-between mb-6">
+            <h2 id="sectionTitle" class="text-3xl font-bold">Trending Now</h2>
+            <div class="flex space-x-2">
+                <button id="prevPage" class="px-4 py-2 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition-shadow duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button id="nextPage" class="px-4 py-2 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition-shadow duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Movies Grid -->
+        <div id="moviesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Movies will be loaded here -->
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="hidden text-center py-20">
+            <i class="fas fa-spinner fa-spin text-6xl text-red-500 mb-4"></i>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Loading amazing movies...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center py-20">
+            <i class="fas fa-film text-6xl text-gray-400 mb-4"></i>
+            <p class="text-xl text-gray-600 dark:text-gray-400">No movies found</p>
+        </div>
+    </main>
+
+    <!-- Movie Detail Modal -->
+    <div id="movieModal" class="modal fixed inset-0 bg-black bg-opacity-75 z-50 items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div id="modalContent">
+                <!-- Movie details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal fixed inset-0 bg-black bg-opacity-75 z-50 items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-md w-full p-8 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="authModalTitle" class="text-2xl font-bold">Login</h2>
+                <button id="closeAuthModal" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Email</label>
+                    <input type="email" id="loginEmail" required
+                        class="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Password</label>
+                    <input type="password" id="loginPassword" required
+                        class="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500">
+                </div>
+                <button type="submit" class="w-full py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors duration-300">
+                    Login
+                </button>
+                <p class="text-center text-sm">
+                    Don't have an account?
+                    <button type="button" id="switchToRegister" class="text-red-500 hover:underline">Sign up</button>
+                </p>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="hidden space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Username</label>
+                    <input type="text" id="registerUsername" required
+                        class="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Email</label>
+                    <input type="email" id="registerEmail" required
+                        class="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Password</label>
+                    <input type="password" id="registerPassword" required
+                        class="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Confirm Password</label>
+                    <input type="password" id="registerPassword2" required
+                        class="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500">
+                </div>
+                <button type="submit" class="w-full py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors duration-300">
+                    Sign Up
+                </button>
+                <p class="text-center text-sm">
+                    Already have an account?
+                    <button type="button" id="switchToLogin" class="text-red-500 hover:underline">Login</button>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-4 max-w-sm z-50">
+        <div class="flex items-center space-x-3">
+            <i id="toastIcon" class="fas fa-check-circle text-2xl"></i>
+            <p id="toastMessage" class="font-medium"></p>
+        </div>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
