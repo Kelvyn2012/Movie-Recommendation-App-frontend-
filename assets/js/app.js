@@ -1,5 +1,5 @@
 // Configuration
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = 'https://movie-recommendation-app-uskd.onrender.com/api';
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/';
 
 // State
