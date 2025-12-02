@@ -172,24 +172,34 @@ async function apiCall(endpoint, options = {}) {
         defaultOptions.headers['Authorization'] = `Bearer ${currentToken}`;
     }
 
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        ...defaultOptions,
-        ...options,
-        headers: { ...defaultOptions.headers, ...options.headers },
-    });
+    try {
+        console.log(`Making API call to: ${API_BASE_URL}${endpoint}`);
 
-    if (response.status === 401) {
-        handleLogout();
-        throw new Error('Unauthorized');
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            ...defaultOptions,
+            ...options,
+            headers: { ...defaultOptions.headers, ...options.headers },
+        });
+
+        console.log(`Response status: ${response.status}`);
+
+        if (response.status === 401) {
+            handleLogout();
+            throw new Error('Unauthorized');
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error('API Error:', data);
+            throw new Error(data.detail || data.message || data.error || 'An error occurred');
+        }
+
+        return data;
+    } catch (error) {
+        console.error('API Call Failed:', error);
+        throw error;
     }
-
-    const data = await response.json();
-
-    if (!response.ok) {
-        throw new Error(data.detail || data.message || 'An error occurred');
-    }
-
-    return data;
 }
 
 // Movie Loading
